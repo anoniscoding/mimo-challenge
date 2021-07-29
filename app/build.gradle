@@ -1,0 +1,100 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+    id 'androidx.navigation.safeargs'
+}
+
+android {
+    compileSdkVersion versions.compile_sdk
+    buildToolsVersion versions.build_tools
+
+    defaultConfig {
+        applicationId "com.anoniscoding.mimo"
+        minSdkVersion versions.min_sdk
+        targetSdkVersion versions.target_sdk
+        versionCode versions.version_code
+        versionName versions.version_name
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    buildTypes {
+        debug {
+            buildConfigField "String", "BASE_URL", BASE_URL
+        }
+        release {
+            minifyEnabled false
+            debuggable false
+            buildConfigField "String", "BASE_URL", BASE_URL
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
+
+    //Util
+    implementation "androidx.core:core-ktx:${versions.core_ktx}"
+    implementation "com.google.android.material:material:${versions.material}"
+    implementation "androidx.appcompat:appcompat:${versions.appcompat}"
+    implementation "androidx.constraintlayout:constraintlayout:${versions.constraint_layout}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}"
+    implementation "androidx.fragment:fragment-ktx:${versions.fragment_ktx}"
+    implementation "androidx.recyclerview:recyclerview:${versions.recycler_view}"
+
+    //ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.lifecycle_viewmodel_ktx}"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    kapt "androidx.lifecycle:lifecycle-compiler:${versions.lifecycle_viewmodel_ktx}"
+
+    //Navigation
+    implementation "androidx.navigation:navigation-fragment-ktx:${versions.navigation}"
+    implementation "androidx.navigation:navigation-ui-ktx:${versions.navigation}"
+
+    //Network
+    implementation "com.google.code.gson:gson:${versions.gson}"
+    implementation "com.squareup.retrofit2:converter-gson:${versions.converter_gson}"
+    implementation "com.squareup.retrofit2:retrofit:${versions.retrofit}"
+    implementation "com.squareup.okhttp3:logging-interceptor:${versions.http_logging}"
+
+
+    //Persistence
+    implementation "androidx.room:room-runtime:${versions.room}"
+    kapt "androidx.room:room-compiler:${versions.room}"
+    implementation "androidx.room:room-ktx:${versions.room}"
+
+    //Hilt
+    implementation "com.google.dagger:hilt-android:${versions.hilt}"
+    kapt "com.google.dagger:hilt-compiler:${versions.hilt}"
+    androidTestImplementation  "com.google.dagger:hilt-android-testing:${versions.hilt}"
+    kaptAndroidTest "com.google.dagger:hilt-compiler:${versions.hilt}"
+    testImplementation "com.google.dagger:hilt-android-testing:${versions.hilt}"
+    kaptTest "com.google.dagger:hilt-compiler:${versions.hilt}"
+
+    //Test
+    testImplementation "junit:junit:${test_versions.junit}"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:${test_versions.mockito_kotlin}"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.coroutines}"
+    testImplementation "androidx.test:rules:${test_versions.androidx_test}"
+    testImplementation "androidx.arch.core:core-testing:${test_versions.arch_core}"
+    debugImplementation "com.google.truth:truth:${test_versions.google_truth}"
+}
+
+kapt {
+    correctErrorTypes true
+}
