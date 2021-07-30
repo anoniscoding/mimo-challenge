@@ -41,6 +41,8 @@ class LessonViewModel @Inject constructor(
     }
 
     private fun onNextEvent() {
+        logCurrentLessonTime()
+
         val nextLessonIndex = lessons.indexOf(getViewState()?.currentLesson) + 1
         if (nextLessonIndex < lessons.size) {
             val newViewState = LessonViewState(
@@ -51,6 +53,18 @@ class LessonViewModel @Inject constructor(
             _dataStates.value = DataState.Success(newViewState)
         } else {
             _viewEffects.value = LessonViewEffect.NavigateToDoneScreen
+        }
+    }
+
+    private fun logCurrentLessonTime() {
+        getViewState()?.let {
+            viewModelScope.launch {
+                setLessonCompletionEventUseCase(
+                    id = it.currentLesson.id,
+                    startTime = it.startTime,
+                    endTime = System.currentTimeMillis().toString()
+                )
+            }
         }
     }
 
