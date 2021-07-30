@@ -28,7 +28,28 @@ class LessonViewModel @Inject constructor(
     private fun fetchLessons() {
         launchRequest {
             lessons.addAll(getLessonsUseCase().map { it.toLessonView() })
+            onNextEvent()
         }
     }
 
+    fun setIntent(intent: LessonIntent) {
+        when (intent) {
+            is LessonIntent.OnNextEvent -> onNextEvent()
+            is LessonIntent.OnRetryEvent -> fetchLessons()
+        }
+    }
+
+    private fun onNextEvent() {
+        val nextLessonIndex = lessons.indexOf(getViewState()?.currentLesson) + 1
+        if (nextLessonIndex < lessons.size) {
+            val newViewState = LessonViewState(
+                currentLesson = lessons[nextLessonIndex],
+                isNextButtonEnabled = !lessons[nextLessonIndex].hasInput(),
+                startTime = System.currentTimeMillis().toString()
+            )
+            _dataStates.value = DataState.Success(newViewState)
+        } else {
+            _viewEffects.value = LessonViewEffect.NavigateToDoneScreen
+        }
+    }
 }
