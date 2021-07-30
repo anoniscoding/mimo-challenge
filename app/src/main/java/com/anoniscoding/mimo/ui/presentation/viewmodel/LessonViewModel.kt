@@ -35,6 +35,7 @@ class LessonViewModel @Inject constructor(
     fun setIntent(intent: LessonIntent) {
         when (intent) {
             is LessonIntent.OnNextEvent -> onNextEvent()
+            is LessonIntent.OnInputEvent -> onInputEvent(intent.inputText)
             is LessonIntent.OnRetryEvent -> fetchLessons()
         }
     }
@@ -51,5 +52,11 @@ class LessonViewModel @Inject constructor(
         } else {
             _viewEffects.value = LessonViewEffect.NavigateToDoneScreen
         }
+    }
+
+    private fun onInputEvent(inputText: String) {
+        val isNextButtonEnabled = getViewState()?.currentLesson?.getAnswer() == inputText
+        _dataStates.value =
+            DataState.Success(getViewState()?.copy(isNextButtonEnabled = isNextButtonEnabled))
     }
 }
